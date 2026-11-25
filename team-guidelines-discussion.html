@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Team guidelines discussion</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Instrument+Sans:wght@400..700&display=swap" rel="stylesheet">
+<style>
+:root{
+  color-scheme: light dark;
+  --paper:#EFF3F6;
+  --surface:#FFFFFF;
+  --ink:#13202B;
+  --muted:#4F5E6B;
+  --line:#CFD8E0;
+  --comm:#9A5200;
+  --meet:#0B6B74;
+  --ai:#5B3BC4;
+  --git:#23693A;
+  --good:#1F6B4A;
+  --bad:#A8382A;
+  --font-head:"Bricolage Grotesque","Instrument Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --font-body:"Instrument Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --font-code:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --paper:#10161C;
+    --surface:#18212A;
+    --ink:#E8EEF3;
+    --muted:#9AA9B6;
+    --line:#2B3946;
+    --comm:#F0B04F;
+    --meet:#55C7D1;
+    --ai:#A998FF;
+    --git:#6FCB89;
+    --good:#6FCB89;
+    --bad:#F0877A;
+  }
+}
+
+*{box-sizing:border-box}
+[hidden]{display:none !important}
+html{scroll-behavior:smooth;scroll-padding-top:24px}
+body{
+  margin:0;background:var(--paper);color:var(--ink);
+  font:400 1.0625rem/1.65 var(--font-body);
+  -webkit-font-smoothing:antialiased;
+}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--ink);outline-offset:3px}
+.topic :focus-visible{outline-color:var(--accent)}
+
+/* ---------- Layout ---------- */
+.shell{display:grid;grid-template-columns:220px minmax(0,1fr);min-height:100vh}
+main{padding:0 clamp(20px,5vw,72px) 140px 24px}
+.col{max-width:46rem}
+
+/* ---------- Rail (commit-graph style navigation) ---------- */
+.rail{position:sticky;top:0;align-self:start;height:100vh;padding:56px 0 40px 36px}
+.rail .brand{font:700 1.05rem/1.2 var(--font-head);margin:0 0 30px;letter-spacing:-.01em}
+.rail ol{list-style:none;margin:0;padding:0}
+.rail li{position:relative;padding-left:34px;min-height:64px}
+.rail li::after{content:"";position:absolute;left:8px;top:24px;bottom:-4px;width:2px;background:var(--line)}
+.rail li:last-child::after{display:none}
+.rail li.done::after{background:var(--ink)}
+.rail .node{
+  position:absolute;left:0;top:4px;width:18px;height:18px;border-radius:50%;
+  border:2px solid var(--line);background:var(--paper);z-index:1;
+  transition:background .2s,border-color .2s,box-shadow .2s;
+}
+.rail li.done .node{background:var(--ink);border-color:var(--ink)}
+.rail li.active .node{
+  background:var(--c);border-color:var(--c);
+  box-shadow:0 0 0 4px color-mix(in srgb,var(--c) 24%,transparent);
+}
+.rail a{display:block;color:var(--muted);text-decoration:none;font:500 .95rem/1.3 var(--font-body);padding-top:3px}
+.rail a:hover{color:var(--ink)}
+.rail li.active a{color:var(--ink);font-weight:700}
+
+/* ---------- Hero ---------- */
+.hero{padding-top:88px}
+h1{
+  font:700 clamp(2.7rem,6.2vw,4.5rem)/1.02 var(--font-head);
+  letter-spacing:-.025em;margin:0 0 24px;text-wrap:balance;
+}
+.lede{font-size:1.25rem;line-height:1.55;margin:0 0 18px;max-width:40rem}
+.frame{color:var(--muted);margin:0;max-width:38rem}
+.agenda{list-style:none;margin:40px 0 0;padding:0;border-top:2px solid var(--ink)}
+.agenda a{
+  display:grid;grid-template-columns:12px 1fr;gap:0 16px;align-items:center;
+  padding:16px 6px;border-bottom:1px solid var(--line);text-decoration:none;
+}
+.agenda a:hover{background:color-mix(in srgb,var(--ink) 6%,transparent)}
+.agenda .dot{width:12px;height:12px;border-radius:50%;background:var(--c)}
+.agenda .t{font-weight:700}
+.agenda .n{display:block;color:var(--muted);font-size:.95rem;line-height:1.4}
+
+/* ---------- Topic sections ---------- */
+.s-comm{--accent:var(--comm)}
+.s-meet{--accent:var(--meet)}
+.s-ai{--accent:var(--ai)}
+.s-git{--accent:var(--git)}
+.s-wrap{--accent:var(--ink)}
+.topic{--accent-soft:color-mix(in srgb,var(--accent) 11%,var(--paper));padding-top:112px}
+.topic-head{border-left:6px solid var(--accent);padding-left:20px;margin-bottom:40px}
+h2{font:700 clamp(1.9rem,3.6vw,2.7rem)/1.08 var(--font-head);letter-spacing:-.018em;margin:0 0 12px;text-wrap:balance}
+.goal{color:var(--muted);margin:0;max-width:34rem}
+h3{font:650 1.25rem/1.3 var(--font-head);letter-spacing:-.005em;margin:52px 0 14px}
+h3:first-child{margin-top:0}
+p{margin:0 0 1em}
+strong{font-weight:650}
+code{font:.9em var(--font-code);background:color-mix(in srgb,var(--ink) 8%,transparent);padding:.1em .35em;border-radius:4px}
+
+.bullets{list-style:none;padding:0;margin:0}
+.bullets li{position:relative;padding-left:26px;margin:.75em 0}
+.bullets li::before{content:"";position:absolute;left:0;top:.82em;width:12px;height:3px;background:var(--accent)}
+
+/* Good / not-so-good pairs */
+.compare{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:16px 0 8px}
+@media (max-width:720px){.compare{grid-template-columns:1fr}}
+.msg{
+  background:var(--surface);border:1px solid var(--line);border-top:4px solid var(--tone);
+  border-radius:8px;padding:16px 18px 18px;
+}
+.msg.bad{--tone:var(--bad)}
+.msg.good{--tone:var(--good)}
+.msg h4{margin:0 0 8px;font:700 .95rem/1.3 var(--font-body);color:var(--tone)}
+.msg p{margin:0;font-size:.98rem;line-height:1.55}
+.msg p + p{margin-top:.6em;color:var(--muted)}
+.msg pre{margin:0;overflow-x:auto;font:.9rem/1.55 var(--font-code);white-space:pre-wrap}
+.msg ul{margin:0;padding-left:1.1em;font-size:.98rem}
+
+/* Two browser windows */
+.windows{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:18px 0 8px}
+@media (max-width:720px){.windows{grid-template-columns:1fr}}
+.win{background:var(--surface);border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.win-bar{display:flex;align-items:center;padding:10px 14px;border-bottom:1px solid var(--line)}
+.win-bar::before{content:"";flex:none;width:8px;height:8px;border-radius:50%;background:var(--line);box-shadow:14px 0 0 var(--line),28px 0 0 var(--line);margin-right:44px}
+.chip{display:inline-block;padding:2px 12px;border-radius:999px;background:var(--p);color:var(--paper);font-size:.85rem;font-weight:700}
+.win p{margin:0;padding:16px 18px 18px;font-size:.98rem;color:var(--muted)}
+
+/* Principles (A to D) */
+.principles{margin:8px 0}
+.principle{display:grid;grid-template-columns:3.4rem 1fr;gap:0 14px;padding:26px 0;border-top:1px solid var(--line)}
+.principles .principle:last-child{border-bottom:1px solid var(--line)}
+.principle .ltr{font:800 2.5rem/1 var(--font-head);color:var(--accent)}
+.principle h3{margin:2px 0 6px}
+.principle .bullets{margin-top:4px}
+.statement{font:700 clamp(2.1rem,5.4vw,3.4rem)/1.04 var(--font-head);letter-spacing:-.022em;margin:0 0 14px;text-wrap:balance}
+.statement-sub{color:var(--muted);max-width:34rem;margin:0 0 8px}
+
+/* Checklists */
+.check{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:22px 24px 18px;margin:16px 0}
+.check h3{margin:0 0 2px}
+.check .sub{color:var(--muted);margin:0 0 10px;font-size:.98rem}
+.check ul{list-style:none;padding:0;margin:8px 0}
+.check label{display:flex;gap:12px;align-items:flex-start;cursor:pointer;padding:7px 0}
+.check input{accent-color:var(--accent);width:20px;height:20px;margin:3px 0 0;flex:none;cursor:pointer}
+.check input:checked + span{color:var(--muted)}
+.check .status{font-size:.95rem;color:var(--muted);margin:10px 0 0;font-weight:500}
+.check.complete .status{color:var(--good);font-weight:700}
+
+/* Scenarios */
+.scenarios{margin:8px 0;border-bottom:1px solid var(--line)}
+.scenarios details{border-top:1px solid var(--line)}
+.scenarios summary{
+  cursor:pointer;list-style:none;padding:18px 40px 18px 0;position:relative;font-weight:600;
+}
+.scenarios summary::-webkit-details-marker{display:none}
+.scenarios summary::after{
+  content:"+";position:absolute;right:6px;top:50%;transform:translateY(-52%);
+  font:500 1.7rem/1 var(--font-head);color:var(--accent);
+}
+.scenarios details[open] summary::after{content:"\2013"}
+.scenarios .answer{padding:0 0 20px;color:var(--ink);max-width:40rem}
+.scenarios .answer p{margin:0}
+
+/* Discussion block */
+.discuss{background:var(--accent-soft);padding:26px 30px 22px;margin-top:56px}
+.discuss h3{margin:0 0 6px}
+.discuss .bullets li{font-size:1.1rem;font-weight:500;margin:.9em 0}
+
+/* Code and templates */
+.formats{margin:0 0 8px;display:grid;gap:10px}
+.formats div{display:grid;grid-template-columns:7.5rem 1fr;gap:4px 14px;align-items:baseline}
+.formats dt{font-weight:600;color:var(--muted)}
+.formats dd{margin:0}
+.formats code{display:block;padding:8px 12px;overflow-wrap:anywhere;font-size:.88rem;background:var(--surface);border:1px solid var(--line);border-radius:6px}
+@media (max-width:620px){.formats div{grid-template-columns:1fr}}
+
+.btn{
+  font:600 .9rem/1 var(--font-body);padding:9px 14px;border-radius:6px;cursor:pointer;flex:none;
+  border:1px solid var(--accent);background:transparent;color:var(--accent);
+}
+.btn:hover{background:var(--accent-soft)}
+
+.tpl{background:var(--surface);border:1px solid var(--line);border-radius:8px;margin:16px 0;overflow:hidden}
+.tpl-bar{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:10px 14px 10px 18px;border-bottom:1px solid var(--line)}
+.tpl-bar b{font-weight:650}
+.tpl pre{margin:0;padding:16px 18px;overflow-x:auto;font:.88rem/1.6 var(--font-code)}
+
+/* AI + Git callout */
+.callout{border:2px solid var(--accent);padding:26px 28px 22px;margin:20px 0}
+.callout h3{margin:0 0 8px}
+blockquote{
+  margin:24px 0 18px;padding:2px 0 2px 22px;border-left:4px solid var(--accent);
+  font:500 1.15rem/1.6 var(--font-body);
+}
+
+/* Wrap-up */
+.takeaways{list-style:none;padding:0;margin:0;border-top:2px solid var(--ink)}
+.takeaways li{display:grid;grid-template-columns:12px 1fr;gap:0 16px;padding:16px 4px;border-bottom:1px solid var(--line);align-items:baseline}
+.takeaways .dot{width:12px;height:12px;border-radius:50%;background:var(--c);transform:translateY(1px)}
+.closing{font:700 clamp(1.5rem,3vw,2.1rem)/1.2 var(--font-head);letter-spacing:-.012em;margin:56px 0 12px;text-wrap:balance}
+
+/* ---------- Small screens ---------- */
+@media (max-width:959px){
+  html{scroll-padding-top:68px}
+  .shell{display:block}
+  .rail{
+    height:auto;padding:12px 18px;z-index:20;overflow-x:auto;
+    background:color-mix(in srgb,var(--paper) 93%,transparent);
+    -webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--line);
+  }
+  .rail .brand{display:none}
+  .rail ol{display:flex;gap:20px}
+  .rail li{flex:0 0 auto;min-height:0;padding-left:24px}
+  .rail li::after{display:none}
+  .rail .node{width:14px;height:14px;top:5px}
+  .rail a{white-space:nowrap}
+  main{padding:0 20px 100px}
+  .hero{padding-top:40px}
+  .topic{padding-top:80px}
+}
+
+@media (prefers-reduced-motion: reduce){
+  html{scroll-behavior:auto}
+  *{transition:none !important}
+}
+
+@media print{
+  .rail{display:none}
+  .shell{display:block}
+  .topic{padding-top:40px;break-inside:avoid-page}
+  .btn{display:none}
+  .scenarios details > .answer{display:block}
+}
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <nav class="rail" aria-label="Sections">
+    <p class="brand">Team guidelines</p>
+    <ol>
+      <li data-s="start" style="--c:var(--ink)"><span class="node"></span><a href="#start">Start</a></li>
+      <li data-s="comm" style="--c:var(--comm)"><span class="node"></span><a href="#comm">Communication</a></li>
+      <li data-s="meet" style="--c:var(--meet)"><span class="node"></span><a href="#meet">Meetings</a></li>
+      <li data-s="ai" style="--c:var(--ai)"><span class="node"></span><a href="#ai">AI use</a></li>
+      <li data-s="git" style="--c:var(--git)"><span class="node"></span><a href="#git">Git and code</a></li>
+      <li data-s="wrap" style="--c:var(--ink)"><span class="node"></span><a href="#wrap">Wrap-up</a></li>
+    </ol>
+  </nav>
+
+  <main>
+    <div class="col">
+
+      <!-- ================= START ================= -->
+      <header id="start" class="hero">
+        <h1>How we work together</h1>
+        <p class="lede">A guide for our team discussion on engineering guidelines. We will cover four topics: how we communicate, how we run meetings, how we use AI, and how we handle Git and code.</p>
+        <p class="frame">These guidelines are not here to add extra steps or to check on anyone. They give everyone the same expectations, help us communicate better, and keep our work at a high standard.</p>
+
+        <ol class="agenda">
+          <li><a href="#comm" style="--c:var(--comm)"><span class="dot"></span><span><span class="t">Responsiveness and communication</span><span class="n">Reply on time, put clients first, raise blockers early</span></span></a></li>
+          <li><a href="#meet" style="--c:var(--meet)"><span class="dot"></span><span><span class="t">Meeting attendance and participation</span><span class="n">Show up ready and take part</span></span></a></li>
+          <li><a href="#ai" style="--c:var(--ai)"><span class="dot"></span><span><span class="t">Responsible AI use</span><span class="n">Use AI, but stay in charge of your work</span></span></a></li>
+          <li><a href="#git" style="--c:var(--git)"><span class="dot"></span><span><span class="t">Git standards and code quality</span><span class="n">Branches, pull requests, clean code, safe commits</span></span></a></li>
+          <li><a href="#wrap" style="--c:var(--ink)"><span class="dot"></span><span><span class="t">Wrap-up</span><span class="n">Key points and next steps</span></span></a></li>
+        </ol>
+      </header>
+
+      <!-- ================= 1. COMMUNICATION ================= -->
+      <section id="comm" class="topic s-comm" aria-labelledby="comm-h">
+        <div class="topic-head">
+          <h2 id="comm-h">Responsiveness and communication</h2>
+          <p class="goal">The goal: keep the team talking well, and handle client concerns on time.</p>
+        </div>
+
+        <h3>What we expect</h3>
+        <ul class="bullets">
+          <li><strong>Reply promptly.</strong> This covers team messages, emails, and client messages.</li>
+          <li><strong>Clients come first.</strong> Look at blockers, urgent requests, and production problems before anything else.</li>
+          <li><strong>Can’t answer yet? Say so.</strong> Tell the person you got the message and when you will follow up.</li>
+          <li><strong>Don’t leave people waiting.</strong> If someone needs your feedback or decision, answer them.</li>
+          <li><strong>Tell the team before you are away.</strong> Set an Out-of-Office (OOO) message and name someone who can handle urgent things.</li>
+          <li><strong>Raise blockers early.</strong> Don’t wait until they start to hurt the project timeline.</li>
+        </ul>
+
+        <h3>Tips to stay responsive</h3>
+        <p><strong>Use a separate browser profile for each client.</strong> Create a new user (profile) in your browser, so you have two browsers open: one for Stratpoint and one for the client. Each one keeps its own logins, so you stay signed in to both and never mix up accounts.</p>
+        <div class="windows">
+          <div class="win"><div class="win-bar"><span class="chip" style="--p:var(--ink)">Stratpoint</span></div><p>Your Stratpoint email, chat, and tickets</p></div>
+          <div class="win"><div class="win-bar"><span class="chip" style="--p:var(--accent)">Client</span></div><p>The client’s email, chat, and tools</p></div>
+        </div>
+        <ul class="bullets" style="margin-top:22px">
+          <li><strong>Give each profile its own name and color</strong> so you can tell the windows apart at a glance.</li>
+          <li><strong>Turn on notifications for client channels.</strong> Client messages should never get buried under everything else.</li>
+          <li><strong>Set your status.</strong> Show when you are away, in a meeting, or focused, so people know when to expect a reply.</li>
+          <li><strong>Save a few quick replies.</strong> A ready message like “Got it. I’ll update you by [time].” makes it easy to answer right away.</li>
+        </ul>
+      </section>
+
+      <!-- ================= 2. MEETINGS ================= -->
+      <section id="meet" class="topic s-meet" aria-labelledby="meet-h">
+        <div class="topic-head">
+          <h2 id="meet-h">Meeting attendance and participation</h2>
+          <p class="goal">The goal: help everyone take responsibility and stay in step with project work and team talks.</p>
+        </div>
+
+        <h3>What we could expect</h3>
+        <ul class="bullets">
+          <li><strong>Be on time and come ready.</strong> Read the agenda or the last meeting notes first.</li>
+          <li><strong>Can’t join? Tell the organizer before the meeting.</strong> Then catch up from the notes.</li>
+          <li><strong>Take part.</strong> Share your update, ask questions, and say so when you disagree or are unsure.</li>
+          <li><strong>Raise blockers in the meeting.</strong> Don’t wait until later.</li>
+          <li><strong>End with clear actions.</strong> Every action has one owner and a due date.</li>
+          <li><strong>Give the meeting your attention.</strong> Close other tabs and chats.</li>
+        </ul>
+
+        <h3>Working in a hybrid setup</h3>
+        <p>Hybrid work is a blessing. Let’s not take it for granted, and let’s not use it as a reason to get too relaxed.</p>
+        <ul class="bullets">
+          <li><strong>Answer emails and chat within office hours.</strong> We are expected to reply to mails and chat messages during office hours, wherever we work from.</li>
+          <li><strong>Be easy to reach.</strong> Working from home is still work time. Stay online and keep your chat and email open.</li>
+          <li><strong>Give the same effort at home as in the office.</strong> Our work, our meetings, and our updates should be the same.</li>
+          <li><strong>Tell the team before you step away.</strong> If you will be unavailable for a while, let them know in advance.</li>
+        </ul>
+
+        <h3>Tips to help you show up</h3>
+        <ul class="bullets">
+          <li><strong>Add every meeting to your calendar.</strong> Accept the invite so it shows on your calendar, and keep the meeting link in the event.</li>
+          <li><strong>Set reminders and alarms.</strong> Use a calendar reminder before each meeting. For client meetings or early ones, set an alarm on your phone too.</li>
+          <li><strong>Block time to prepare.</strong> Put a short slot before the meeting to read the agenda and the last notes.</li>
+          <li><strong>Update your calendar when plans change.</strong> If you can’t attend, decline early with a short note so the organizer can plan.</li>
+        </ul>
+      </section>
+
+      <!-- ================= 3. AI ================= -->
+      <section id="ai" class="topic s-ai" aria-labelledby="ai-h">
+        <div class="topic-head">
+          <h2 id="ai-h">Responsible AI use</h2>
+          <p class="goal">The goal: use AI as a helper, not a replacement for your own thinking. You stay in charge of the engineering. You should understand your work, and you are responsible for it.</p>
+        </div>
+
+        <p class="statement">AI-assisted, not AI-done.</p>
+        <p class="statement-sub">AI helps you move faster. The thinking, the decisions, and the final result are still yours.</p>
+
+        <div class="principles" style="margin-top:36px">
+          <article class="principle">
+            <span class="ltr" aria-hidden="true">A</span>
+            <div>
+              <h3>Understand what AI gives you</h3>
+              <ul class="bullets">
+                <li>Read and understand all AI-made code, documents, and advice before you use them.</li>
+                <li><strong>Never copy and paste AI code into the project without checking it.</strong></li>
+                <li>Be ready to explain how it works and why you chose it.</li>
+                <li>Check it for correctness, security, speed, and how easy it is to maintain.</li>
+              </ul>
+            </div>
+          </article>
+
+          <article class="principle">
+            <span class="ltr" aria-hidden="true">B</span>
+            <div>
+              <h3>Follow the project requirements</h3>
+              <ul class="bullets">
+                <li>Make sure the output meets the project’s Acceptance Criteria (AC).</li>
+                <li>Check it against business rules, technical requirements, and coding standards.</li>
+                <li><strong>“It works” or “the basic tests pass” does not mean it is right.</strong></li>
+              </ul>
+            </div>
+          </article>
+
+          <article class="principle">
+            <span class="ltr" aria-hidden="true">C</span>
+            <div>
+              <h3>AI helps, you decide</h3>
+              <ul class="bullets">
+                <li>Use AI to support coding, troubleshooting, and learning.</li>
+                <li>Thinking, technical decisions, and final deliverables stay with the developer.</li>
+                <li>You are responsible for the quality, reliability, and maintainability of your work.</li>
+              </ul>
+            </div>
+          </article>
+
+          <article class="principle">
+            <span class="ltr" aria-hidden="true">D</span>
+            <div>
+              <h3>Follow the client’s AI rules</h3>
+              <ul class="bullets">
+                <li>Know the client’s AI policy and follow it.</li>
+                <li><strong>If the client bans or limits AI, don’t use AI tools on that project.</strong></li>
+                <li>Never put confidential client information, source code, credentials, or sensitive data into AI tools that are not approved.</li>
+                <li>Not sure what is allowed? Ask the project lead or manager first.</li>
+              </ul>
+            </div>
+          </article>
+        </div>
+
+        <h3>Keep AI traces out of Git</h3>
+        <p>AI tools often leave files in your project, like configuration files, commands, agent files, and notes. These should not end up in the repository.</p>
+        <ul class="bullets">
+          <li><strong>Remove the traces of AI agents</strong> from your project before you commit. This includes AI configuration files, custom commands, agent files, and anything similar.</li>
+          <li><strong>Examples:</strong> the <code>.claude</code>, <code>.opencode</code>, or <code>.cursor</code> directories, where agents and commands are stored.</li>
+          <li><strong>Config files</strong> like <code>mcp.json</code> and <code>opencode.json</code>.</li>
+          <li><strong>Add them to <code>.gitignore</code></strong> so they are never added to a commit.</li>
+          <li><strong>Check <code>git status</code> before you commit.</strong> Make sure only the files for your task are there.</li>
+        </ul>
+        <div class="tpl">
+          <div class="tpl-bar"><b>Example .gitignore entries</b><button type="button" class="btn" data-copy="#ignore-tpl">Copy</button></div>
+<pre id="ignore-tpl"># AI agent files (use the names your tools create)
+.claude/
+.opencode/
+.cursor/
+mcp.json
+opencode.json</pre>
+        </div>
+
+        <h3>Commit and push by yourself, not the AI</h3>
+        <div class="callout">
+          <p><strong>AI can help you write the code. You are the one who commits and pushes it.</strong> Do not let AI agents run Git commit and push on their own. Review the changes, then commit and push them yourself.</p>
+          <div class="compare">
+            <div class="msg good">
+              <h4>Fine to ask AI for</h4>
+              <ul>
+                <li>Help writing and fixing code</li>
+                <li>A review of your changes</li>
+                <li>Ideas for a commit message</li>
+              </ul>
+            </div>
+            <div class="msg bad">
+              <h4>Keep for the developer</h4>
+              <ul>
+                <li>Reviewing the final changes</li>
+                <li>Running <code>git commit</code></li>
+                <li>Running <code>git push</code></li>
+              </ul>
+            </div>
+          </div>
+          <p style="margin-top:18px"><strong>Why?</strong> Git activity is recorded in the git logs. They show who changed what, and every commit carries your name. Owning your code matters: you check what goes in, and you stand behind it.</p>
+          <blockquote>“AI can help us write, review, and improve our code, but committing and pushing changes should remain a developer-controlled activity. These actions are recorded in the Git logs, so we need to maintain transparency, traceability, and accountability for every change we introduce into the repository.”</blockquote>
+          <p style="margin:0"><strong>In simple words:</strong> AI can help you write the code. You are the one who commits and pushes it, because your name is on the git log.</p>
+        </div>
+
+        <h3>Follow your project’s standards</h3>
+        <p>Always follow your project’s own standards first, such as how it names branches and writes commit messages. <strong>If your project has none, use Stratpoint’s standards.</strong> See <a href="#git">Git standards and code quality</a> for branch names, pull requests, and commit messages.</p>
+        <p>This applies to AI-written work too. If AI suggests a branch name or a commit message, change it to match the standard.</p>
+
+        <h3>Check yourself</h3>
+        <div class="check" data-check data-done="All checked. You are ready to use it.">
+          <h3>Before you use AI output</h3>
+          <p class="sub">Tick each one as you go.</p>
+          <ul>
+            <li><label><input type="checkbox"><span>I can explain every part of it in my own words.</span></label></li>
+            <li><label><input type="checkbox"><span>It meets the Acceptance Criteria.</span></label></li>
+            <li><label><input type="checkbox"><span>I ran it and tested more than the happy path.</span></label></li>
+            <li><label><input type="checkbox"><span>I checked it for security problems and exposed secrets.</span></label></li>
+            <li><label><input type="checkbox"><span>It follows our coding standards and fits the existing code.</span></label></li>
+            <li><label><input type="checkbox"><span>The client allows AI on this project, and I shared nothing I shouldn’t have.</span></label></li>
+          </ul>
+          <p class="status" aria-live="polite"></p>
+        </div>
+
+        <h3>Is this okay? Try these</h3>
+        <p>Tap a question to see a suggested answer.</p>
+        <div class="scenarios">
+          <details>
+            <summary>AI wrote a function for you and the tests pass. Can you merge it?</summary>
+            <div class="answer"><p><strong>Not yet.</strong> Passing tests is not enough. Read it, make sure you understand it, and check it against the Acceptance Criteria and for security problems.</p></div>
+          </details>
+          <details>
+            <summary>The client does not allow AI tools. You are stuck on a bug. Can you paste the code into a chatbot?</summary>
+            <div class="answer"><p><strong>No.</strong> Follow the client’s policy. Ask your project lead or a teammate for help instead.</p></div>
+          </details>
+          <details>
+            <summary>You want AI to help read an error log that has an API key inside it.</summary>
+            <div class="answer"><p><strong>Don’t share it.</strong> Credentials and sensitive client data must never go into AI tools that are not approved. If you are not sure the tool is approved, ask your lead first.</p></div>
+          </details>
+          <details>
+            <summary>A teammate asks why you chose an approach that AI suggested. You can’t explain it.</summary>
+            <div class="answer"><p><strong>That is the warning sign.</strong> You must be able to explain your work. Go back, learn how it works, or choose an approach you understand.</p></div>
+          </details>
+          <details>
+            <summary>An AI agent offers to commit and push your changes for you. Should you let it?</summary>
+            <div class="answer"><p><strong>No.</strong> You review the changes, then commit and push them yourself. Your name is on the git log, and you own the code.</p></div>
+          </details>
+          <details>
+            <summary>You see AI configuration files in <code>git status</code> before you commit. What do you do?</summary>
+            <div class="answer"><p><strong>Don’t commit them.</strong> Add them to <code>.gitignore</code>. If Git already tracks them, remove them from tracking first.</p></div>
+          </details>
+        </div>
+
+        <div class="discuss">
+          <h3>Talk about it</h3>
+          <ul class="bullets">
+            <li>Where do you use AI today? Where does it help the most?</li>
+            <li>Has AI ever given you code that looked right but was wrong? What did you do?</li>
+            <li>How do we find out each client’s AI rules?</li>
+            <li>Can any AI tool you use run Git commands on its own?</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ================= 4. GIT ================= -->
+      <section id="git" class="topic s-git" aria-labelledby="git-h">
+        <div class="topic-head">
+          <h2 id="git-h">Git standards and code quality</h2>
+          <p class="goal">The goal: build the same good habits across projects, while respecting each project’s own standards, workflow, and client needs.</p>
+        </div>
+
+        <p>Every project has its own tech stack, client rules, and ways of working. <strong>Always follow your project’s existing standards first.</strong> If your project has none, use Stratpoint’s standards below. They are the shared baseline we are building.</p>
+
+        <h3>Branch names</h3>
+        <ul class="bullets">
+          <li>Follow the agreed naming rules. They keep the repo tidy and show what each branch is for.</li>
+          <li>If your project already has its own rule, use that one. If it has none, use the Stratpoint format below.</li>
+          <li>Avoid vague names like <code>test</code>, <code>changes</code>, or <code>new-feature</code>.</li>
+        </ul>
+        <dl class="formats" style="margin-top:18px">
+          <div><dt>New feature</dt><dd><code>feat/&lt;epic-feature-module&gt;-&lt;short-description&gt;-&lt;developer-branch&gt;</code></dd></div>
+          <div><dt>Bug fix</dt><dd><code>fix/&lt;ticket_number&gt;/&lt;short-description&gt;</code></dd></div>
+        </dl>
+
+        <h3>Clean code before you commit</h3>
+        <div class="check" data-check data-done="All checked. Ready to commit or open a PR.">
+          <h3>Before you commit or open a PR</h3>
+          <p class="sub">Tick each one as you go.</p>
+          <ul>
+            <li><label><input type="checkbox"><span>The code follows the project’s formatting and coding standards.</span></label></li>
+            <li><label><input type="checkbox"><span>There are no unresolved lint errors or extra dependencies.</span></label></li>
+            <li><label><input type="checkbox"><span>There are no credentials, API keys, passwords, or other secrets.</span></label></li>
+            <li><label><input type="checkbox"><span>I removed console logs, debug statements, and temporary code.</span></label></li>
+            <li><label><input type="checkbox"><span>There is no unrelated refactoring mixed into this change.</span></label></li>
+            <li><label><input type="checkbox"><span>I tested the changes and they cause no side effects.</span></label></li>
+          </ul>
+          <p class="status" aria-live="polite"></p>
+        </div>
+
+        <h3>Configuration and environments</h3>
+        <ul class="bullets">
+          <li><strong>Don’t hard-code settings.</strong> Keep configuration values outside the application code.</li>
+          <li><strong>Keep environments separate.</strong> Development, Staging, and Production each have their own settings.</li>
+          <li>Use environment variables, or the approach your project has approved.</li>
+          <li><strong>Never commit environment files that contain secrets.</strong></li>
+          <li>Follow your project’s secrets management practice.</li>
+        </ul>
+        <div class="compare">
+          <div class="msg bad"><h4>Avoid</h4><pre>const apiKey = "abc123-secret-key";</pre></div>
+          <div class="msg good"><h4>Better</h4><pre>const apiKey = process.env.API_KEY;</pre></div>
+        </div>
+
+        <h3>Commits and pushes</h3>
+        <ul class="bullets">
+          <li><strong>Review your changes</strong> before you stage and commit.</li>
+          <li><strong>Write clear commit messages</strong> that say what changed. Use the format below.</li>
+          <li><strong>Commit only what belongs to the task.</strong></li>
+          <li><strong>Run the required checks and tests</strong> before you push.</li>
+          <li><strong>Push only to the right feature or development branch.</strong></li>
+          <li>Don’t push directly to protected or production branches, unless you are clearly allowed to.</li>
+          <li>Don’t force-push a shared branch without agreeing with the team first.</li>
+        </ul>
+        <h3>Commit message format</h3>
+        <p>Write your commit message in this format:</p>
+        <dl class="formats">
+          <div><dt>Format</dt><dd><code>type(scope): short description</code></dd></div>
+        </dl>
+        <ul class="bullets">
+          <li><strong>type</strong> says what kind of change it is. For example, <code>feat</code> for a new feature, <code>fix</code> for a bug fix, <code>doc</code> for documentation, and <code>chore</code> for small upkeep work.</li>
+          <li><strong>scope</strong> is the module or area you changed, like <code>home</code>, <code>auth</code>, or <code>navigation</code>.</li>
+          <li><strong>short description</strong> says what changed. You can add the ticket number at the end, like <code>(TASK-010)</code>.</li>
+        </ul>
+        <div class="msg good" style="margin-top:20px">
+          <h4>Examples</h4>
+<pre>doc(home): add local setup steps to the README
+feat(home): consolidate update customer information into a 13-field AMS_CUSTOMER editor
+feat(auth): add unit tests for PermissionGuard and AMSSecurityClient (TASK-010)
+fix(navigation): close dropdowns on keyboard focus-out
+chore(home): update example message</pre>
+        </div>
+        <div class="msg bad" style="margin-top:16px">
+          <h4>Avoid</h4>
+<pre>update
+fixed stuff
+changes</pre>
+        </div>
+      </section>
+
+      <!-- ================= WRAP-UP ================= -->
+      <section id="wrap" class="topic s-wrap" aria-labelledby="wrap-h">
+        <div class="topic-head">
+          <h2 id="wrap-h">Wrap-up</h2>
+          <p class="goal">What we want everyone to remember.</p>
+        </div>
+
+        <ul class="takeaways">
+          <li style="--c:var(--comm)"><span class="dot"></span><span><strong>Communication.</strong> Reply on time, put clients first, and raise blockers early.</span></li>
+          <li style="--c:var(--meet)"><span class="dot"></span><span><strong>Meetings.</strong> Show up ready, take part, and leave with clear actions.</span></li>
+          <li style="--c:var(--ai)"><span class="dot"></span><span><strong>AI.</strong> AI helps. You understand it, check it, and own the result. You commit and push yourself, and you keep AI files out of Git.</span></li>
+          <li style="--c:var(--git)"><span class="dot"></span><span><strong>Git and code.</strong> Follow your project’s standards, or Stratpoint’s if there are none. Keep changes small and clean, and keep secrets out.</span></li>
+        </ul>
+
+        <p class="closing">We are responsible not only for the code we write, but also for how we communicate, work together, and deliver value to our clients.</p>
+        <p class="statement-sub">Let’s apply these practices the same way across our projects.</p>
+      </section>
+
+    </div>
+  </main>
+</div>
+
+<script>
+(function(){
+  /* ---------- Rail: show where we are ---------- */
+  var rail = document.querySelector('.rail');
+  var items = Array.prototype.slice.call(document.querySelectorAll('.rail li'));
+  var sections = items.map(function(li){ return document.getElementById(li.dataset.s); });
+  var current = -1;
+
+  function updateRail(){
+    var line = window.innerHeight * 0.35;
+    var active = 0;
+    sections.forEach(function(s, i){
+      if (s.getBoundingClientRect().top <= line) active = i;
+    });
+    if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 4) {
+      active = sections.length - 1;
+    }
+    items.forEach(function(li, i){
+      li.classList.toggle('active', i === active);
+      li.classList.toggle('done', i < active);
+      var a = li.querySelector('a');
+      if (i === active) a.setAttribute('aria-current', 'true'); else a.removeAttribute('aria-current');
+    });
+    if (active !== current) {
+      current = active;
+      if (window.innerWidth < 960) {
+        rail.scrollTo({ left: Math.max(0, items[active].offsetLeft - 18), behavior: 'smooth' });
+      }
+    }
+  }
+  window.addEventListener('scroll', updateRail, { passive: true });
+  window.addEventListener('resize', updateRail);
+  updateRail();
+
+  /* ---------- Checklists ---------- */
+  Array.prototype.forEach.call(document.querySelectorAll('[data-check]'), function(box){
+    var inputs = Array.prototype.slice.call(box.querySelectorAll('input[type=checkbox]'));
+    var status = box.querySelector('.status');
+    var doneText = box.getAttribute('data-done') || 'All checked.';
+    function update(){
+      var n = inputs.filter(function(i){ return i.checked; }).length;
+      var all = n === inputs.length;
+      box.classList.toggle('complete', all);
+      status.textContent = all ? doneText : n + ' of ' + inputs.length + ' checked';
+    }
+    inputs.forEach(function(i){ i.addEventListener('change', update); });
+    update();
+  });
+
+  /* ---------- Copy buttons ---------- */
+  function copyText(text){
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      return navigator.clipboard.writeText(text).then(function(){ return true; }, function(){ return fallbackCopy(text); });
+    }
+    return Promise.resolve(fallbackCopy(text));
+  }
+  function fallbackCopy(text){
+    var ta = document.createElement('textarea');
+    ta.value = text;
+    ta.setAttribute('readonly', '');
+    ta.style.position = 'fixed';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.select();
+    var ok = false;
+    try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
+    document.body.removeChild(ta);
+    return ok;
+  }
+  Array.prototype.forEach.call(document.querySelectorAll('[data-copy]'), function(btn){
+    var label = btn.textContent;
+    btn.addEventListener('click', function(){
+      var target = document.querySelector(btn.getAttribute('data-copy'));
+      copyText(target.textContent.trim()).then(function(ok){
+        btn.textContent = ok ? 'Copied' : 'Copy failed';
+        setTimeout(function(){ btn.textContent = label; }, 1600);
+      });
+    });
+  });
+
+})();
+</script>
+</body>
+</html>
